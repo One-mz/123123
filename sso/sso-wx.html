@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Cache-Control" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+
+  <title></title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <!-- <script src="/static-fssc/jquery-1.7.2.min.js"></script> -->
+
+  <script src="../static-fssc/base64.min.js"></script>
+  <!-- <script src="../static-fssc/eruda.js"></script>
+    <script>eruda.init();</script> -->
+</head>
+
+<body>
+
+  <header style="text-align: center;">
+    <h2>认证跳转中...</h2>
+  </header>
+
+
+  <script>
+    var Fssc = Fssc || {};
+    var href = window.location.href;
+    Fssc.version = "?v=1.0.0";
+    Fssc.min = ".min";
+    console.log('href :>> ', href);
+    // 生产
+    if (href.indexOf("fssp-qas-inv.tpv-tech.com") !== -1) {
+      Fssc.host = '/fssp-services/fssp'
+      Fssc.auth = '/fssp-services/auth'
+    } else if (
+      href.indexOf("localhost") !== -1 ||
+      href.indexOf("127.0.0.1") !== -1
+    ) {
+      // 本地测试环境
+      Fssc.host = "http://localhost:8083/fssp";
+      Fssc.auth = "http://localhost:8083/login_auth";
+    }
+
+    //获取url中的参数
+    function getUrlParam(name) {
+      var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+      var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+      if (r != null) return unescape(r[2]);
+      return null; //返回参数值
+    }
+
+    function createCookie(name, value, days) {
+      var expires = "";
+      if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toUTCString();
+      }
+      document.cookie = name + "=" + value + expires + "; path=/";
+    }
+
+    window.onload = function () {
+      var token = getUrlParam('token');
+      var nonce = getUrlParam('nonce');
+      var timestamp = getUrlParam('timestamp');
+      var sign = getUrlParam('sign');
+      console.log('token :>> ', token);
+      console.log('nonce :>> ', nonce);
+      console.log('timestamp :>> ', timestamp);
+      console.log('sign :>> ', sign);
+      window.localStorage.setItem('user', '')
+      console.log('$.ajax :>> ', $.ajax);
+      $.ajax({
+        url: Fssc.host + "/external/common/valid.do",
+        method: "post",
+        dataType: 'json',
+        headers: { 'Content-Type': 'application/json; charset=UTF-8' },
+        contentType: 'application/json;charset=UTF-8',
+        global: false,
+        data: JSON.stringify({
+          token: Base64.encode(token),
+          nonce,
+          timestamp,
+          sign,
+          from: 'wechat'
+        }),
+        success: function (res) {
+
+          if (!res.success && res.message) {
+            if (res.code && res.code === '40029') {
+              window.alert('微信认证Code已失效，请关闭页面重新进入！')
+
+              setTimeout(() => {
+                window.close();
+              }, 500);
+            } else if (res.code && res.code === '60111') {
+              window.alert('微信用户id不存在！')
+
+              setTimeout(() => {
+                window.close();
+              }, 500);
+            } else {
+              window.alert(res.message)
+            }
+            return
+          }
+
+          var result = res.data;
+          // var user = obj.user;
+
+          // createCookie('user', user.userId);
+          window.localStorage.setItem('user', res.data.userId)
+
+          var str = JSON.stringify(result)
+          str = Base64.encode(str);
+
+          window.sessionStorage.setItem('user', str);
+
+          var loginParam = "?userId=" + Base64.encode(result.userId) +
+            "&userName=" + Base64.encode(result.userName) +
+            "&orgCode=" + Base64.encode(result.orgCode) +
+            "&companyCode=" + Base64.encode(result.companyCode) +
+            "&emailAddress=" + Base64.encode(result.emailAddress);
+
+          $.ajax({
+            url: Fssc.auth + "/uiLoginIn.do" + loginParam,
+            method: 'POST',
+            global: false,
+            success: function (res) {
+              console.log(res);
+              createCookie("userId", result.userId);
+       
+              window.history.replaceState(null, "", window.location.origin + '/mobile#')
+              window.location.reload()
+            },
+            error: function (err) {
+              console.log("单点登录报错", err);
+            }
+          });
+          // window.location.href = window.location.origin + '/mobile#' + url
+
+        },
+        error: function (err) {
+          console.log(err);
+        }
+      });
+    }
+  </script>
+
+</body>
+
+</html>

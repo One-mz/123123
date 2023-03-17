@@ -1,0 +1,123 @@
+
+
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+
+    <title></title>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <!-- <script src="/static-fssc/jquery-1.7.2.min.js"></script> -->
+    <!-- TODO -->
+    <script src="../static-fssc/base64.min.js"></script>
+  </head>
+  <body>
+
+    <header style="text-align: center;">
+      <h2>认证跳转中...</h2>
+    </header>
+
+
+    <script>
+      var Fssc = Fssc || {};
+      var href = window.location.href;
+      Fssc.version = "?v=1.0.0";
+      Fssc.min = ".min";
+
+      // 生产
+      if (href.indexOf("pro.uig.com") !== -1) {
+
+      } else if (href.indexOf("test.tuniu.org/sst") !== -1) {
+
+      } else if (
+          href.indexOf("localhost") !== -1 ||
+          href.indexOf("127.0.0.1") !== -1
+      ) {
+        // 本地测试环境
+          Fssc.host = "http://localhost:9527/uig_api";
+          Fssc.image = "http://localhost:9527/imagefile";
+      } else {
+        // uat 和 dev环境
+          Fssc.version = "";
+          Fssc.min = "";
+          Fssc.base = "http://" + location.href.split("http://")[1].split("/")[0];
+          Fssc.host = "/uig-fssc-service";
+          Fssc.image = "/imagefile";
+      }
+
+      //获取url中的参数
+      function getUrlParam(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+        var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+        if (r != null) return unescape(r[2]);
+        return null; //返回参数值
+      }
+
+      function createCookie(name, value, days) {
+        var expires = "";
+        if (days) {
+          var date = new Date();
+          date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+          expires = "; expires=" + date.toUTCString();
+        }
+        document.cookie = name + "=" + value + expires + "; path=/";
+      }
+
+      window.onload = function () {
+        var url = getUrlParam('redirect');
+        var token = getUrlParam('token');
+        var IDnumber = getUrlParam('IDnumber');
+        var timestamp = getUrlParam('timestamp');
+
+        window.localStorage.setItem('user', '')
+
+        $.ajax({
+          url: Fssc.host + "/oa/validToken.do",
+          method: "POST",
+          global: false,
+          data: {
+            token: token,
+            IDnumber: IDnumber,
+            timestamp: timestamp,
+          },
+          success: function(res) {
+            console.log(res);
+
+            if (!res.success && res.message) {
+              window.alert(res.message)
+              return
+            }
+
+            var data = res.data;
+            var obj = JSON.parse(data);
+            var user = obj.user;
+
+            // createCookie('user', user.userId);
+            window.localStorage.setItem('user', user.userId)
+
+            var str = JSON.stringify(user)
+            str = Base64.encode(str);
+            window.sessionStorage.setItem('user', str);
+
+            console.log(url);
+            // window.location.href = window.location.origin + '/mobile#' + url
+            window.history.replaceState(null,"",window.location.origin + '/mobile#' + url)
+            window.location.reload()
+          },
+          error: function(err) {
+            console.log(err);
+          }
+        });
+      }
+    </script>
+
+  </body>
+</html>
+
+

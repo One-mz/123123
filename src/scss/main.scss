@@ -1,0 +1,15 @@
+@import './_utils';
+@import './vant';
+
+.second-group.van-cell-group--inset{
+	box-shadow: 0 0 5px 1px rgba(0,0,0,0.051);
+	margin-bottom: 15px;
+}
+
+.invoice-icon {
+  z-index: 1000;
+  position: fixed;
+}
+.loan {
+	padding-bottom: 4rem;
+}

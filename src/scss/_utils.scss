@@ -1,0 +1,220 @@
+// 尺寸
+.size14 {
+    font-size: 14px;
+}
+.size20 {
+    font-size: 20px;
+}
+// margin
+.mt-1 {
+    margin-top: 1px;
+}
+
+// 多行省略号
+
+.ellipsis {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+@for $i from 1 through 4 {
+    .ellipsis-#{$i} {
+        @extend .ellipsis;
+        -webkit-line-clamp: $i;
+    }
+}
+
+// 滚动流畅
+.scroll{
+    -webkit-overflow-scrolling: touch;
+}
+.scroll-y{
+    overflow-y: auto;
+}
+.scroll-x{
+    overflow-x: auto;
+}
+
+//分隔线条
+.required::before{
+    content: " ";
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 1px;
+    border-top: 1px solid #C7C7C7 !important;
+    color: #C7C7C7;
+    -webkit-transform-origin: 0 0;
+    transform-origin: 0 0;
+    -webkit-transform: scaleY(0.5);
+    transform: scaleY(0.5);
+}
+.weui-cell::before{
+    content: " ";
+    position: absolute;
+    left: 0 !important;
+    right: 0;
+    height: 1px;
+    border-top: 1px solid #C7C7C7 !important;
+    color: #C7C7C7;
+    -webkit-transform-origin: 0 0;
+    transform-origin: 0 0;
+    -webkit-transform: scaleY(0.5);
+    transform: scaleY(0.5);
+}
+.weui-cells:after{
+    border-bottom-color: #C7C7C7 !important;
+}
+.weui-cells::before{
+    border-top-color: #C7C7C7 !important;
+}
+.vux-1px-t::before{
+    border-top-color: #C7C7C7 !important;
+}
+//页签中每个模块的划分线
+//.vux-flex-col{
+//    background-color: #adacac;
+//}
+
+//分组名称字体颜色
+.weui-cells__title{
+    color: #333 !important;
+    font-size:16px !important;
+    font-weight: 700;
+}
+
+//按钮保持在最下面
+.flow-btns-container{
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+.flow-btns-container>.weui-cells {
+  margin-top: 0;
+  padding: 0.5rem;
+}
+
+
+// 弹窗位置
+.weui-dialog {
+  top: 8% !important;
+}
+
+
+.weui-textarea {
+  padding-top: 3px;
+}
+
+table {
+  input.weui-input {
+    text-align: center;
+  }
+}
+
+.scroller-content {
+	z-index: 0 !important;
+}
+
+.vux-confirm {
+  .weui-dialog__bd {
+    max-height: 88vh;
+    overflow: auto;
+  }
+}
+
+.weui-cell:before {
+  border-top: 1px solid #ebedf0 !important;
+}
+
+.flex-row-space-center{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.flex-row-center-center{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer-box{
+  position: fixed;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid #D9D9D9;
+  width: 100%;
+  left: 0;
+  padding: 0.5rem;
+  background-color: #fff;
+}
+
+.van-button--primary{
+
+  background-color: #008DF7;
+}
+.primary-bg{
+  background-color: #008DF7;
+  color:#fff;
+}
+.special-bg{
+  background-color: #7B7BFF;
+  color:#fff;
+}
+.success-bg{
+  background-color: #14CCB9;
+  color:#fff;
+}
+.danger-bg{
+  background-color: #FC675C;
+  color:#fff;
+}
+.warning-bg{
+  background-color: #FFAD33;
+  color:#fff;
+}
+
+.primary-color{
+  color: #7B7BFF;
+  // background-color:#fff;
+}
+.success-color{
+  color: #14CCB9;
+  // background-color:#fff;
+}
+.danger-color{
+  color: #FC675C;
+  // background-color:#fff;
+}
+.warning-color{
+  color: #FFAD33;
+  // background-color:#fff;
+}
+.info-bg{
+  color: #E1E1E1;
+  background-color: #666666;
+}
+
+.primary-bg:hover{
+  background-color: #008DF7bb;
+  color:#fff;
+}
+.special-bg:hover{
+  background-color: #7B7BFFbb;
+  color:#fff;
+}
+
+.success-bg:hover{
+  background-color: #14CCB9bb;
+  color:#fff;
+}
+.danger-bg:hover{
+  background-color: #FC675Cbb;
+  color:#fff;
+}
+.warning-bg:hover{
+  background-color: #FFAD33bb;
+  color:#fff;
+}

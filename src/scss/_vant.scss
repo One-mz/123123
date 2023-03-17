@@ -1,0 +1,64 @@
+.van-cell-group {
+	background-color: transparent;
+}
+.van-cell-group::after {
+	border: 0;
+}
+.van-cell-group--inset {
+	box-shadow: 0 0 10px 1px rgba(33, 33, 33, 0.04);
+	margin-top: 10px;
+	margin-bottom: 10px;
+	background-color: #fff;
+}
+
+.van-cell {
+	font-size: 16px;
+	line-height: 20px;
+}
+
+.van-field__label {
+	color: #333;
+}
+
+.van-cell-group__title--inset,
+.van-cell-group__title {
+	font-size: 17px;
+	padding-left: 20px;
+	margin-top: 5px;
+	color: #333;
+	font-weight: 700;
+	padding-bottom: 4px;
+	margin-bottom: 10px;
+}
+
+.van-tabs__nav {
+	background-color: transparent;
+}
+.van-tab {
+	background-color: transparent;
+}
+.van-tab--active {
+	color: rgb(0, 65, 116);
+	font-weight: 500;
+}
+.van-tab__text--ellipsis {
+	overflow: auto;
+	-webkit-line-clamp: unset;
+	text-align: center;
+	font-size: 16px;
+}
+.van-tabs__line {
+	background-color: rgb(0, 65, 116);
+}
+.van-switch--on {
+	background-color: rgb(0, 65, 116);
+}
+
+.van-cell__value {
+	color: #323233;
+}
+
+.van-dialog__confirm, .van-dialog__confirm:active{
+	color: rgb(0, 65, 116);
+
+}
